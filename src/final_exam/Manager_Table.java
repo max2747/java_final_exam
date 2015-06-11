@@ -120,7 +120,7 @@ import javax.swing.table.TableModel;
 		        try {
 		        	FileWriter fw= new FileWriter(f);
 		        	BufferedWriter bw = new BufferedWriter(fw);
-		        	String first = String.format("%10s%12s%13s%8s%8s%10s%11s%6s%8s%7s","날짜","테이블번호","후라이드순살","양념순살","간장순살","맥주500cc","맥주1000cc","음료수","총금액","계산유무");
+		        	String first = String.format("%16s%16s%8s%6s%6s%10s%11s%6s%5s%7s","날짜","테이블번호","후라이드순살","양념순살","간장순살","맥주500cc","맥주1000cc","음료수","총금액","계산유무");
 					bw.write(first);
 					bw.newLine();
 					for(int a = 0; a < Manager.order.size(); a ++){
@@ -129,30 +129,30 @@ import javax.swing.table.TableModel;
 		        			  
 		        			  bw.write(Manager.order.get(a).date);
 		        			  bw.flush();
-		        			  bw.write(String.valueOf(Manager.order.get(a).table_num));
+		        			  bw.write(String.format("%6s",String.valueOf(Manager.order.get(a).table_num)));
 		        			  bw.flush();
-		        			  bw.write(String.valueOf(Manager.order.get(a).sunsal));
+		        			  bw.write(String.format("%14s",String.valueOf(Manager.order.get(a).sunsal)));
 		        			  bw.flush();
-		        			  bw.write(String.valueOf(Manager.order.get(a).yangnum));
+		        			  bw.write(String.format("%12s",String.valueOf(Manager.order.get(a).yangnum)));
 		        			  bw.flush();
-		        			  bw.write(String.valueOf(Manager.order.get(a).ganjang));
+		        			  bw.write(String.format("%10s",String.valueOf(Manager.order.get(a).ganjang)));
 		        			  bw.flush();
-		        			  bw.write(String.valueOf(Manager.order.get(a).beer_500));
+		        			  bw.write(String.format("%10s",String.valueOf(Manager.order.get(a).beer_500)));
 		        			  bw.flush();
-		        			  bw.write(String.valueOf(Manager.order.get(a).beer_1000));
+		        			  bw.write(String.format("%13s",String.valueOf(Manager.order.get(a).beer_1000)));
 		        			  bw.flush();
-		        			  bw.write(String.valueOf(Manager.order.get(a).beberage));
+		        			  bw.write(String.format("%11s",String.valueOf(Manager.order.get(a).beberage)));
 		        			  bw.flush();
-		        			  bw.write(String.valueOf(Manager.total_sum(a)));
+		        			  bw.write(String.format("%8s",String.valueOf(Manager.total_sum(a))));
 		        			  bw.flush();
 		        			  if(Manager.order.get(i).cash_finish == 0){
-		        				  bw.write("NO");  
+		        				  bw.write(String.format("%10s","NO"));  
 		        			  }
 		        			  if(Manager.order.get(i).cash_finish == 1){
-		        				  bw.write("YES");  
+		        				  bw.write(String.format("%10s","YES"));  
 		        			  }
 		        			  if(Manager.order.get(i).cash_finish == 2){
-		        				  bw.write("CANCEL");  
+		        				  bw.write(String.format("%10s","CANCEL"));  
 		        			  }
 		        			  
 		        			  bw.flush();
