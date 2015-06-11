@@ -6,11 +6,19 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -99,6 +107,76 @@ import javax.swing.table.TableModel;
 		
 		else if(text.equals("저장")){
 			
+			
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			int x=JOptionPane.showConfirmDialog(this,"저장하시겠습니까?","저장",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+		    if(x==JOptionPane.YES_OPTION){
+		    	fileChooser.showSaveDialog(this);
+		        File f=fileChooser.getSelectedFile();
+		        int i = 0;
+		        
+		    	//String [] index = {"날짜","테이블 번호","후라이드 순살","양념 순살", "간장 순살", "맥주 500cc", "맥주 1000cc", "음료수","총 금액","계산유무"};
+		        try {
+		        	FileWriter fw= new FileWriter(f);
+		        	BufferedWriter bw = new BufferedWriter(fw);
+		        	String first = String.format("%10s%12s%13s%8s%8s%10s%11s%6s%8s%7s","날짜","테이블번호","후라이드순살","양념순살","간장순살","맥주500cc","맥주1000cc","음료수","총금액","계산유무");
+					bw.write(first);
+					bw.newLine();
+					for(int a = 0; a < Manager.order.size(); a ++){
+		        	 
+		        		  try{
+		        			  
+		        			  bw.write(Manager.order.get(a).date);
+		        			  bw.flush();
+		        			  bw.write(String.valueOf(Manager.order.get(a).table_num));
+		        			  bw.flush();
+		        			  bw.write(String.valueOf(Manager.order.get(a).sunsal));
+		        			  bw.flush();
+		        			  bw.write(String.valueOf(Manager.order.get(a).yangnum));
+		        			  bw.flush();
+		        			  bw.write(String.valueOf(Manager.order.get(a).ganjang));
+		        			  bw.flush();
+		        			  bw.write(String.valueOf(Manager.order.get(a).beer_500));
+		        			  bw.flush();
+		        			  bw.write(String.valueOf(Manager.order.get(a).beer_1000));
+		        			  bw.flush();
+		        			  bw.write(String.valueOf(Manager.order.get(a).beberage));
+		        			  bw.flush();
+		        			  bw.write(String.valueOf(Manager.total_sum(a)));
+		        			  bw.flush();
+		        			  if(Manager.order.get(i).cash_finish == 0){
+		        				  bw.write("NO");  
+		        			  }
+		        			  if(Manager.order.get(i).cash_finish == 1){
+		        				  bw.write("YES");  
+		        			  }
+		        			  if(Manager.order.get(i).cash_finish == 2){
+		        				  bw.write("CANCEL");  
+		        			  }
+		        			  
+		        			  bw.flush();
+		        			  bw.newLine();
+		        			  
+		        			  System.out.println(Manager.order.get(a).table_num);
+		        			  System.out.println(Manager.order.get(a).sunsal);
+		        			  System.out.println(Manager.order.get(a).yangnum);
+		        			  
+		        		   //String str = data.get(i);
+		        		  // fw.write(String.valueOf(savedata));
+		        		   bw.flush();
+		        		   bw.close();
+		        		  }catch(IOException exception){
+		        			  
+		        		  }
+		        		 
+		        		}
+		        } catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		        }
+		        
 		}
 		
 	}

@@ -10,7 +10,7 @@ public class Manager {
 	
 	protected String [] menupan = {"순살 후라이드","양념 순살","간장 순살", "맥주 500cc","맥주 1000cc","음료수"};
 	protected int [] menu_howmany = {0,0,0,0,0,0};
-	protected int [] price = {16000, 18000, 17000, 4000, 7000, 1000};
+	protected static int [] price = {16000, 18000, 17000, 4000, 7000, 1000};
 	protected int [] sum;
 	protected static ArrayList<Manager> order = new ArrayList<Manager>(5);
 	
@@ -37,17 +37,27 @@ public class Manager {
 		this.cash_finish = cash_finish;
 	}
 	
+	protected static int total_sum(int num){
+		int sum_1 = order.get(num).sunsal * price[0];
+		int sum_2 = order.get(num).yangnum * price[1];
+		int sum_3 = order.get(num).ganjang * price[2];
+		int sum_4 = order.get(num).beer_500 * price[3];
+		int sum_5 = order.get(num).beer_1000 * price[4];
+		int sum_6 = order.get(num).beberage * price[5];		
+		
+		return sum_1 + sum_2 + sum_3 + sum_4 + sum_5 + sum_6;
+	}
 	
 	
 	static void delete(int num){
 		for(int i = 0; i < order.size(); i ++){
 			if(order.get(i).table_num == num && order.get(i).cash_finish == 0){
-				order.remove(i);
+				order.get(i).cash_finish = 2;
 			}
 		}
 	}
 
-	static void listadd(String date,int sunsal , int yangnum , int ganjang , int beer_500, int beer_1000, int beberage, int table_num,int cash_finish){
+	static void listadd(String date ,int sunsal , int yangnum , int ganjang , int beer_500, int beer_1000, int beberage, int table_num,int cash_finish){
 //		Manager man = new Manager(sunsal,yangnum,ganjang,beer_500, beer_1000, beberage,table_num);
 		order.add(new Manager(date,sunsal,yangnum,ganjang,beer_500, beer_1000, beberage, table_num,cash_finish));
 	}
