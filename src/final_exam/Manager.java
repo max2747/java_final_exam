@@ -26,8 +26,7 @@ public class Manager {
 	
 	Manager(String date,int sunsal , int yangnum , int ganjang , int beer_500, int beer_1000, int beberage,int table_num,int cash_finish){
 		this.date = date;
-		this.sunsal = sunsal;
-		
+		this.sunsal = sunsal;		
 		this.yangnum = yangnum;
 		this.ganjang = ganjang;
 		this.beer_500 = beer_500;
@@ -80,9 +79,30 @@ public class Manager {
 	}
 
 
-
-	public static void pay_ok() {
+	public static void pay_ok(int table_num) {
 		// TODO Auto-generated method stub
+		for(int i = 0; i <= Manager.order.size() ; i ++){
+			if(Manager.order.get(i).table_num == table_num){
+				if(Manager.order.get(i).cash_finish == 0){
+					Manager.order.get(i).cash_finish = 1;
+					break;
+				}
+				
+			}
+		}
+		
+	}
+
+	public static void modify(int table_num) {
+		for(int i = 0; i <= Manager.order.size() ; i ++){
+			if(Manager.order.get(i).table_num == table_num){
+				if(Manager.order.get(i).cash_finish == 0){
+					Manager.order.remove(i);
+					break;
+				}
+				
+			}
+		}
 		
 	}
 
