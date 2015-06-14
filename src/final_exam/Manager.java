@@ -56,7 +56,12 @@ public class Manager {
 			}
 		}
 	}
-
+	static void listadd(String date ,int sunsal , int yangnum , int ganjang , int beer_500, int beer_1000, int beberage, int table_num,int total_sum ,int cash_finish){
+//		Manager man = new Manager(sunsal,yangnum,ganjang,beer_500, beer_1000, beberage,table_num);
+		order.add(new Manager(date,sunsal,yangnum,ganjang,beer_500, beer_1000, beberage, table_num,cash_finish));
+	}
+	
+	
 	static void listadd(String date ,int sunsal , int yangnum , int ganjang , int beer_500, int beer_1000, int beberage, int table_num,int cash_finish){
 //		Manager man = new Manager(sunsal,yangnum,ganjang,beer_500, beer_1000, beberage,table_num);
 		order.add(new Manager(date,sunsal,yangnum,ganjang,beer_500, beer_1000, beberage, table_num,cash_finish));
