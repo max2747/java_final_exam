@@ -12,7 +12,7 @@ public class Manager {
 	protected int [] menu_howmany = {0,0,0,0,0,0};
 	protected static int [] price = {16000, 18000, 17000, 4000, 7000, 1000};
 	protected int [] sum;
-	protected static ArrayList<Manager> order = new ArrayList<Manager>(5);
+	protected static ArrayList<Manager> order = new ArrayList<Manager>();
 	
 	int sunsal;
 	int yangnum;
@@ -48,21 +48,25 @@ public class Manager {
 	}
 	
 	
-	static void delete(int num){
+	static void delete(int num, String date){
 		for(int i = 0; i < order.size(); i ++){
-			if(order.get(i).table_num == num && order.get(i).cash_finish == 0){
-				order.get(i).cash_finish = 2;
+			if(order.get(i).table_num == num && order.get(i).cash_finish == 0 && order.get(i).date.equals(date)){
+				String date_before = Manager.order.get(i).date;
+				int sunsal = Integer.parseInt(String.valueOf(Manager.order.get(i).sunsal));
+				int yangnum = Integer.parseInt(String.valueOf(Manager.order.get(i).yangnum));
+				int ganjang = Integer.parseInt(String.valueOf(Manager.order.get(i).ganjang));
+				int beer_500 = Integer.parseInt(String.valueOf(Manager.order.get(i).beer_500));
+				int beer_1000 = Integer.parseInt(String.valueOf(Manager.order.get(i).beer_1000));
+				int beberage = Integer.parseInt(String.valueOf(Manager.order.get(i).beberage));
+				int table_num_before = Integer.parseInt(String.valueOf(Manager.order.get(i).table_num));
+				Manager.order.remove(i);
+				Manager.order.add(i,new Manager(date_before, sunsal,yangnum,ganjang,beer_500,beer_1000,beberage,table_num_before,2));
+				break;
 			}
 		}
 	}
-	static void listadd(String date ,int sunsal , int yangnum , int ganjang , int beer_500, int beer_1000, int beberage, int table_num,int total_sum ,int cash_finish){
-//		Manager man = new Manager(sunsal,yangnum,ganjang,beer_500, beer_1000, beberage,table_num);
-		order.add(new Manager(date,sunsal,yangnum,ganjang,beer_500, beer_1000, beberage, table_num,cash_finish));
-	}
-	
 	
 	static void listadd(String date ,int sunsal , int yangnum , int ganjang , int beer_500, int beer_1000, int beberage, int table_num,int cash_finish){
-//		Manager man = new Manager(sunsal,yangnum,ganjang,beer_500, beer_1000, beberage,table_num);
 		order.add(new Manager(date,sunsal,yangnum,ganjang,beer_500, beer_1000, beberage, table_num,cash_finish));
 	}
 	
@@ -81,10 +85,19 @@ public class Manager {
 
 	public static void pay_ok(int table_num) {
 		// TODO Auto-generated method stub
-		for(int i = 0; i <= Manager.order.size() ; i ++){
+		for(int i = 0; i < Manager.order.size() ; i ++){
 			if(Manager.order.get(i).table_num == table_num){
 				if(Manager.order.get(i).cash_finish == 0){
-					Manager.order.get(i).cash_finish = 1;
+					String date = Manager.order.get(i).date;
+					int sunsal = Integer.parseInt(String.valueOf(Manager.order.get(i).sunsal));
+					int yangnum = Integer.parseInt(String.valueOf(Manager.order.get(i).yangnum));
+					int ganjang = Integer.parseInt(String.valueOf(Manager.order.get(i).ganjang));
+					int beer_500 = Integer.parseInt(String.valueOf(Manager.order.get(i).beer_500));
+					int beer_1000 = Integer.parseInt(String.valueOf(Manager.order.get(i).beer_1000));
+					int beberage = Integer.parseInt(String.valueOf(Manager.order.get(i).beberage));
+					int table_num_before = Integer.parseInt(String.valueOf(Manager.order.get(i).table_num));
+					Manager.order.remove(i);
+					Manager.order.add(i,new Manager(date, sunsal,yangnum,ganjang,beer_500,beer_1000,beberage,table_num_before,1));
 					break;
 				}
 				
@@ -94,7 +107,7 @@ public class Manager {
 	}
 
 	public static void modify(int table_num) {
-		for(int i = 0; i <= Manager.order.size() ; i ++){
+		for(int i = 0; i < Manager.order.size() ; i ++){
 			if(Manager.order.get(i).table_num == table_num){
 				if(Manager.order.get(i).cash_finish == 0){
 					Manager.order.remove(i);

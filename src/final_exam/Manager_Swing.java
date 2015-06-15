@@ -54,8 +54,8 @@ public class Manager_Swing extends JFrame{
 	
 	static class  table_manager extends JPanel implements ActionListener{
 		static ArrayList<JButton> table = new ArrayList<JButton>(); //버튼 저장 리스트
-		static int [] table_switch = new int[8];
-		static String [] table_date_info   = new String[8];//주문한 상태면 스위치 1로 바꿔준다.
+		static int [] table_switch = new int[8];//주문한 상태면 스위치 1로 바꿔준다.
+		static String [] table_date_info   = new String[8]; //각 테이블의 날짜,시간에 대한 정보가 저장된다.
 		table_manager(){
 			
 			for(int i = 1 ; i <= 8 ; i ++){ //버튼 초기화 및 추가
@@ -111,14 +111,12 @@ class popupmenu extends JPopupMenu implements ActionListener{ // 주문이 완료된 �
 		add(count); add(change); add(delete); 
 		setLocation(table_num);
 
-		//setBorder(new BevelBorder(BevelBorder.RAISED));
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		JMenuItem c = (JMenuItem)e.getSource();
 		String choice = c.getText();
-		System.out.println(choice);
 		if(choice.equals("삭제")){ //나중에 JTable에서도 주문 취소라고 표시
 			delete();
 		}
@@ -137,7 +135,7 @@ class popupmenu extends JPopupMenu implements ActionListener{ // 주문이 완료된 �
 	protected void delete(){
 		table_manager.table_switch[table_num - 1] = 0; //주문이 취소됬으므로 스위치 0으로 바꿔줌
 		table_manager.table.get(table_num - 1).setText(table_num+"번 테이블"); //JButton 텍스트를 다시 복귀
-		Manager.delete(table_num ); // 메니지 클래스의 데이터에 접근해 취소되었음을 수정함
+		Manager.delete(table_num ,table_date_info[table_num-1]); // 메니지 클래스의 데이터에 접근해 취소되었음을 수정함
 		Manager_Table.Delete_Order(table_num); // 테이블에서 데이터를 수정함.
 	}
 	
@@ -178,9 +176,10 @@ class pay extends JDialog implements ActionListener{
 		btn_ok.addActionListener(this); btn_cancel.addActionListener(this);
 		add(center,BorderLayout.CENTER); add(south,BorderLayout.SOUTH);
 		//JButton.getBounds().x 
-		setSize(300,180);
+		setSize(400,200);
 		setTitle("계산하는 창");
 		setVisible(true);
+		setLocation(table_manager.table.get(table_num-1).getBounds().x + 150,table_manager.table.get(table_num-1).getBounds().y + 100);
 	}
 
 	@Override
@@ -325,7 +324,30 @@ class Menupan extends JDialog implements ActionListener{
 		}
 		
 		else if(btn_text.equals("OK")){
-			press_ok();
+			String date_info = date_info();
+			
+			int [] order = new int [7]; //각 메뉴 저장할 배열
+			for(int i = 0; i <6 ; i ++){
+				order[i] = Integer.parseInt(area.get(i).getText());
+			}
+			order[6] = table_num; //끝에는 테이블 번호를 저장
+			manager.listadd(date_info,order[0], order[1], order[2],order[3],order[4],order[5],order[6],0); //arraylist에 값을 추가해준다
+			int total_sum = 0;
+			
+			for(int i = 0; i < menu_price.length ; i ++){
+				int menu = order[i] * menu_price[i];
+				total_sum = menu+total_sum;
+			}
+			
+			
+			if(Menupan.modify == 0){ //modify할때 1로 바꿔줌으로써 날짜에 새로운 데이터 못들어오게함.(날짜 바뀜 방지용)
+				table_manager.table_date_info[table_num - 1] = date_info;
+			}
+			
+			empty_area();
+			add_Table(table_num, date_info,order,total_sum);
+			chage_buttonText(table_num, order ,total_sum ,date_info);
+			dispose();
 			
 		}
 		else if(btn_text.equals("Cancel")){
@@ -343,42 +365,22 @@ class Menupan extends JDialog implements ActionListener{
 		return date_info;
 		
 	}
-	protected void press_ok(){
-		String date_info = date_info();
-		
-		int [] order = new int [7]; //각 메뉴 저장할 배열
-		for(int i = 0; i <6 ; i ++){
-			order[i] = Integer.parseInt(area.get(i).getText());
-		}
-		order[6] = table_num; //끝에는 테이블 번호를 저장
-		manager.listadd(date_info,order[0], order[1], order[2],order[3],order[4],order[5],order[6],0);
-		//show_order(table_num);//후라이드 순살","양념 순살", "간장 순살", "맥주 500cc", "맥주 1000cc", "음료수
-		int total_sum = 0;
-		for(int i = 0; i < menu_price.length ; i ++){
-			int menu = order[i] * menu_price[i];
-			total_sum = menu+total_sum;
-		}
-		
+	protected void chage_buttonText(int table_num, int [] order , int total_sum , String date_info){
 		table_manager.table.get(table_num - 1).setText("<html>"+table_num+"번 테이블 주문내역 <br/> <br/>" +"후라이드 순살 : "+order[0]+"<br/>"
-		+"양념 순살 : "+order[1] +"<br/>" +"간장 순살 : "+order[2] +"<br/>"+"맥주 500cc : "+order[3] +"<br/>"+	"맥주 1000cc : "+order[4] +"<br/>"
-		+"음료수 : "+order[5] +"<br/>"+"총 금액 : "+total_sum+"<br/>"+date_info +"</html>"); //버튼의  텍스트 바꿈
-		if(Menupan.modify == 0){ //modify할때 1로 바꿔줌으로써 날짜에 새로운 데이터 못들어오게함.
-			table_manager.table_date_info[table_num - 1] = date_info;
-		}
-		
+				+"양념 순살 : "+order[1] +"<br/>" +"간장 순살 : "+order[2] +"<br/>"+"맥주 500cc : "+order[3] +"<br/>"+	"맥주 1000cc : "+order[4] +"<br/>"
+				+"음료수 : "+order[5] +"<br/>"+"총 금액 : "+total_sum+"<br/>"+date_info +"</html>"); //버튼의  텍스트 바꿈
+	}
+	protected void empty_area(){
 		for(int i = 0; i < area.size() ; i ++){
 			area.get(i).setText("");
 		}
 		
-		
-		//String [] index = {"날짜","테이블 번호","후라이드 순살","양념 순살", "간장 순살", "맥주 500cc", "맥주 1000cc", "음료수","총 금액","계산유무"};
-		
-		Object[] contents = {date_info, table_num, order[0], order[1],order[2],order[3],order[4],order[5], total_sum, "NO"};			
+	}
+	protected void add_Table(int table_num, String date_info, int [] order, int total_sum){
+		Object[] contents = {date_info,table_num,order[0],order[1],order[2],order[3],order[4],order[5], total_sum, "NO"};			
 		Manager_Table.defaultTableModel.addRow(contents);
 		//Manager_Table.clearFields();
-			table_manager.table_switch[table_num-1] = 1;	
-					
-		dispose();
+			table_manager.table_switch[table_num-1] = 1;
 	}
 
 
@@ -433,7 +435,7 @@ class menu_popup extends JDialog implements ActionListener{ //메뉴 개수 입력받는
 		
 		try{			
 			num = Integer.parseInt(btn_num.getText());
-			if(before_num != 0){				
+			if(before_num != 0){				 //더하기 버튼이 눌려졌을때 실행됩니다.
 				show_num.setText(String.valueOf(before_num + num));
 				before_num = 0;
 				return;
